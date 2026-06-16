@@ -1,30 +1,41 @@
-# Exam #N: "Exam Title"
-## Student: s123456 LASTNAME FIRSTNAME 
+# Exam #1: "Last Race"
+## Student: s354269 ONORI TOMMASO
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: Home Page - Containes the Game Rules
+- Route `/login/`: Login Page - Contains the Login Form
+- Route `*`: Fallback Page = Home Page
+- Route `/newtorkmap`: Game Setup Phase - Displays the Underground Network
+- Route `planningroute`: Route Planning Phase - Allows player to Select the Segments
+- Route `/results`: Result Page - Showing the Final Score
+- Route `/scores`: Ranking Page - Showing the Global Ranking
 
 ## API Server
 
-- POST `/api/something`
+- METHOD `/api/something`
   - request parameters and request body content
   - response body content
-- GET `/api/something`
-  - request parameters
-  - response body content
-- POST `/api/something`
-  - request parameters and request body content
-  - response body content
-- ...
+
+- GET `/api/sessions/current`
+- POST `/api/sessions/current`
+- DELETE `/api/sessions/current`
+
+- GET `/api/network`
+
+- GET `/api/game/setup`
+
+- POST `/api/game/execute`
+
+- GET `/api/ranking`
 
 ## Database Tables
 
-- Table `users` - contains xx yy zz
-- Table `something` - contains ww qq ss
-- ...
+- Table `Stations(SID, Name)`
+- Table `Lines(LID, Color)`
+- Table `Stops(LID, SID, StopNumber)`
+- Table `Events(EID, Name, Description, Value)`
+- Table `Player(PID, Name, Surname, BestScore, Email, HashedPassword, Salt)`
 
 ## Main React Components
 
