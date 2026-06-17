@@ -7,7 +7,7 @@
 - Route `/login/`: Login Page - Contains the Login Form
 - Route `*`: Fallback Page = Home Page
 - Route `/newtorkmap`: Game Setup Phase - Displays the Underground Network
-- Route `planningroute`: Route Planning Phase - Allows player to Select the Segments
+- Route `/planningroute`: Game Route Planning Phase - Allows player to Select the Segments
 - Route `/results`: Result Page - Showing the Final Score
 - Route `/scores`: Ranking Page - Showing the Global Ranking
 
@@ -18,8 +18,45 @@
   - response body content
 
 - GET `/api/sessions/current`
-- POST `/api/sessions/current`
+  - req: {
+      method: "GET"
+    }
+  - res: {
+      id: "_id",
+      name: "mock_name",
+      surname: "mock_surname",
+      username: "mock_username",
+      email: "mock_email",
+      bestScore: "mock_score"
+    }
+
+- POST `/api/sessions`
+  - req: {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: {
+        "username": "mock_username",
+        "password": "mock_password"
+      }
+    }
+  - res: {
+      id: "_id",
+      name: "mock_name",
+      surname: "mock_surname",
+      username: "mock_username",
+      email: "mock_email",
+      bestScore: "mock_score"
+    }
+
 - DELETE `/api/sessions/current`
+  - req: {
+      method: "DELETE",
+    }
+  - res: {
+    message: "Successfully logged out!"
+  }
 
 - GET `/api/network`
 
@@ -32,7 +69,7 @@
 ## Database Tables
 
 - Table `Stations(SID, Name)`
-- Table `Lines(LID, Color)`
+- Table `Lines(LID, Name)`
 - Table `Stops(LID, SID, StopNumber)`
 - Table `Events(EID, Name, Description, Value)`
 - Table `Player(PID, Name, Surname, BestScore, Email, HashedPassword, Salt)`
