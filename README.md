@@ -21,13 +21,16 @@
   - req: {
       method: "GET"
     }
-  - res: {
+  - res(200 OK): {
       id: "_id",
       name: "mock_name",
       surname: "mock_surname",
       username: "mock_username",
       email: "mock_email",
       bestScore: "mock_score"
+    }
+  - res(401 Unauthorized): {
+      error: "No active session."
     }
 
 - POST `/api/sessions`
@@ -41,7 +44,7 @@
         "password": "mock_password"
       }
     }
-  - res: {
+  - res(200 OK): {
       id: "_id",
       name: "mock_name",
       surname: "mock_surname",
@@ -49,14 +52,15 @@
       email: "mock_email",
       bestScore: "mock_score"
     }
+  - res(401 Unauthorized): {
+      error: "Invalid credentials."
+    }
 
 - DELETE `/api/sessions/current`
   - req: {
-      method: "DELETE",
+      method: "DELETE"
     }
-  - res: {
-    message: "Successfully logged out!"
-  }
+  - res(200 OK): {}
 
 - GET `/api/network`
 

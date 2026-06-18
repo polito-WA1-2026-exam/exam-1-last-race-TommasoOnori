@@ -2,7 +2,7 @@ import sqlite3 from 'sqlite3';
 
 const db = new sqlite3.Database('last_race.db', (err) => {
     if (err) {
-        console.log(`Database connection failed: ${err.message}`);
+        console.error(`Database connection failed: ${err.message}`);
     } else {
         console.log("Successfully connected to the SQLite database!");
     }
@@ -50,7 +50,7 @@ db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS Stops(
         LID INTEGER NOT NULL,
         SID INTEGER NOT NULL,
-        StopNumber INTEGER UNIQUE NOT NULL,
+        StopNumber INTEGER NOT NULL,
 
         PRIMARY KEY (LID, SID),
         FOREIGN KEY (LID) REFERENCES Lines(LID),
@@ -68,10 +68,16 @@ db.serialize(() => {
         PID INTEGER PRIMARY KEY AUTOINCREMENT,
         Name TEXT NOT NULL,
         Surname TEXT NOT NULL,
-        BestScore INTEGER,
         Email TEXT UNIQUE NOT NULL,
         HashedPassword TEXT NOT NULL,
         Salt TEXT NOT NULL
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS Games(
+        GID INTEGER PRIMARY KEY AUTOINCREMENT,
+        PID INTEGER NOT NULL,
+        Score NOT NULL,
+        Date TEXT NOT NULL
     )`);
 
     // Table Population
@@ -120,11 +126,11 @@ db.serialize(() => {
         (3, 8, 3),
         (3, 9, 4),
 
-        (3, 10, 1),
-        (3, 11, 1),
-        (3, 8, 1),
-        (3, 12, 1),
-        (3, 13, 1)
+        (4, 10, 1),
+        (4, 11, 2),
+        (4, 8, 3),
+        (4, 12, 4),
+        (4, 13, 5)
     `);
 
 
@@ -138,11 +144,20 @@ db.serialize(() => {
         ('Busker Performance', 'You generously tipped a talented musician on the platform.', -3),
         ('Lucky Seat', 'You found some spare change left under your train seat.', 3)
     `);
+
+    db.run(`INSERT OR IGNORE INTO Games(PID, Score, Date) VALUES
+        (1, 17, '2026-06-15 10:00:00'),
+        (1, 0, '2026-06-15 10:30:00'),
+        (1, 20, '2026-06-16 11:00:00'),
+
+        (2, 21, '2026-06-15 14:00:00'),
+        (2, 24, '2026-06-18 09:00:00')
+    `);
 });
 
 db.close((err) => {
     if (err) {
-        console.log(`Failed to close database connection: ${err.message}`);
+        console.error(`Failed to close database connection: ${err.message}`);
     } else {
         console.log("Connection successfully closed!");
     }

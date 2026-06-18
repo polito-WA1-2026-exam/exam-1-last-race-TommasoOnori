@@ -11,25 +11,22 @@ const db = new sqlite3.Database('last_race.db', (err) => {
 
 const players = [
     {
-        name: "Tommaso",
-        surname: "Onori",
-        bestScore: null,
-        email: "tommaso.onori@test.it",
-        password: "Password1!"
-    },
-    {
         name: "Mario",
         surname: "Rossi",
-        bestScore: 25,
         email: "mario.rossi@test.it",
         password: "Password2!"
     },
     {
         name: "Luca",
         surname: "Bianchi",
-        bestScore: 10,
         email: "luca.bianchi@test.it",
         password: "Password3!"
+    },
+    {
+        name: "Tommaso",
+        surname: "Onori",
+        email: "tommaso.onori@test.it",
+        password: "Password1!"
     }
 ];
 
@@ -45,9 +42,9 @@ db.serialize(() => {
             console.error(`A cryptography error occurred: ${err}`);
         }
 
-        const sqlInsertion = `INSERT OR IGNORE INTO Players(Name, Surname, BestScore, Email, HashedPassword, Salt) VALUES (?, ?, ?, ?, ?, ?)`;
+        const sqlInsertion = `INSERT OR IGNORE INTO Players(Name, Surname, Email, HashedPassword, Salt) VALUES (?, ?, ?, ?, ?)`;
 
-        db.run(sqlInsertion, [player.name, player.surname, player.bestScore, player.email, hashedPasswordHex, salt], (err) => {
+        db.run(sqlInsertion, [player.name, player.surname, player.email, hashedPasswordHex, salt], (err) => {
             if (err) {
                 console.error(`User insertion failed: ${err}`);
             } else {
