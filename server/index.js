@@ -26,6 +26,14 @@ const db = new sqlite3.Database('last_race.db', (err) => {
 
 // --- Authentication APIs ---
 
+app.get('/api/sessions/current', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.status(401).json({ error: "Unauthenticated user." });
+  }
+});
+
 app.post('/api/sessions', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
@@ -40,6 +48,21 @@ app.post('/api/sessions', (req, res, next) => {
     });
   })(req, res, next);
 });
+
+app.delete('/api/sessions/current', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.logout(() => {
+      res.end();
+    });
+  }
+});
+
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.status(401).json({ error: "Unauthenticated user." });
+}
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

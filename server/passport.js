@@ -9,7 +9,7 @@ passport.use(new LocalStrategy(
             const user = await getUser(username, password);
 
             if (!user) {
-                return callback(null, false, { message: "Incorrect email or password!" });
+                return callback(null, false, { message: "Invalid credentials." });
             }
 
             return callback(null, user);
