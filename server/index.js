@@ -1,10 +1,16 @@
 import express from "express";
 import sqlite3 from 'sqlite3';
 import session from 'express-session';
+import cors from 'cors';
 import passport from './passport.js';
 
 const app = express();
 const port = 3001;
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
 app.use(session({
   secret: "last_race_secret",

@@ -3,12 +3,10 @@
 
 ## React Client Application Routes
 
-- Route `/`: Home Page - Containes the Game Rules
+- Route `/`: Instructions Page - Containes the Game Rules
 - Route `/login`: Login Page - Contains the Login Form
-- Route `*`: Fallback Page = Home Page
-- Route `/newtorkmap`: Game Setup Phase - Displays the Underground Network
-- Route `/planningroute`: Game Route Planning Phase - Allows player to Select the Segments
-- Route `/results`: Result Page - Showing the Final Score
+- Route `*`: Fallback Page = Not Found Page
+- Route `/game`: Game Page - Shows the Network, Segments and eventually Results
 - Route `/scores`: Ranking Page - Showing the Global Ranking
 
 ## API Server
