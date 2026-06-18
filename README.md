@@ -4,7 +4,7 @@
 ## React Client Application Routes
 
 - Route `/`: Home Page - Containes the Game Rules
-- Route `/login/`: Login Page - Contains the Login Form
+- Route `/login`: Login Page - Contains the Login Form
 - Route `*`: Fallback Page = Home Page
 - Route `/newtorkmap`: Game Setup Phase - Displays the Underground Network
 - Route `/planningroute`: Game Route Planning Phase - Allows player to Select the Segments

@@ -2,7 +2,7 @@ import sqlite3 from 'sqlite3';
 
 const db = new sqlite3.Database('last_race.db', (err) => {
     if (err) {
-        console.log(`Connection failed: ${err.message}`);
+        console.log(`Database connection failed: ${err.message}`);
     } else {
         console.log("Successfully connected to the SQLite database!");
     }

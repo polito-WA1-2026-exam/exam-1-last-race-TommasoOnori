@@ -1,0 +1,68 @@
+import sqlite3 from 'sqlite3';
+import crypto from 'crypto';
+
+const db = new sqlite3.Database('last_race.db', (err) => {
+    if (err) {
+        console.error(`Database connection failed: ${err}`);
+    }
+});
+
+export const getUser = (email, password) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM Players WHERE Email = ?`;
+
+        db.get(query, [email], (err, row) => {
+            if (err) {
+                reject(err);
+            } else if (row == undefined) {
+                resolve(false);
+            } else {
+                const user = {
+                    id: row.PID,
+                    name: row.Name,
+                    surname: row.Surname,
+                    bestScore: row.BestScore,
+                    email: row.Email
+                }
+
+                crypto.scrypt(password, row.Salt, 32, (err, hashedPassword) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    const passwordHex = Buffer.from(row.HashedPassword, 'hex');
+
+                    if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) {
+                        resolve(false); // Wrong Password
+                    } else {
+                        resolve(user);
+                    }
+                });
+            }
+        });
+    });
+};
+
+export const getUserByID = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM Players WHERE PID = ?`;
+
+        db.get(query, [id], (err, row) => {
+            if (err) {
+                reject(err);
+            } else if (row == undefined) {
+                resolve({ error: "User Not Found." });
+            } else {
+                const user = {
+                    id: row.PID,
+                    name: row.Name,
+                    surname: row.Surname,
+                    bestScore: row.BestScore,
+                    email: row.Email
+                }
+
+                resolve(user);
+            }
+        });
+    });
+};
