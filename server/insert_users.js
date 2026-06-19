@@ -14,19 +14,19 @@ const players = [
         name: "Mario",
         surname: "Rossi",
         email: "mario.rossi@test.it",
-        password: "Password2!"
+        password: "Password1!"
     },
     {
         name: "Luca",
         surname: "Bianchi",
         email: "luca.bianchi@test.it",
-        password: "Password3!"
+        password: "Password2!"
     },
     {
         name: "Tommaso",
         surname: "Onori",
         email: "tommaso.onori@test.it",
-        password: "Password1!"
+        password: "Password3!"
     }
 ];
 
