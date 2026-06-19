@@ -54,7 +54,7 @@ function App() {
 
           <Route path="/" element={<AppLayout loggedIn={loggedIn} handleLogout={handleLogout} />}>
 
-            <Route index element={<InstructionsPage />} />
+            <Route index element={<InstructionsPage loggedIn={loggedIn} />} />
 
             <Route path="login" element={
               user ? <Navigate to="/" /> : <LoginPage handleLogin={handleLogin} />
@@ -67,9 +67,7 @@ function App() {
             <Route path="scores" element={
               user ? <RankingPage /> : <Navigate to="/login" />
             } />
-            <Route path='*' element={
-              user ? <NotFoundPage /> : <Navigate to="/login" />
-            } />
+            <Route path='*' element={<NotFoundPage />} />
 
           </Route>
 
