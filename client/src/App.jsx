@@ -8,10 +8,10 @@ import LoginPage from './components/pages/LoginPage';
 import GamePage from './components/pages/GamePage';
 import RankingPage from './components/pages/RankingPage';
 
-function AppLayout() {
+function AppLayout({ loggedIn, handleLodout }) {
   return (
     <>
-      <MyNavbar />
+      <MyNavbar loggedIn={loggedIn} handleLogout={handleLogout} />
 
       <main className="container mt-4">
         <Outlet />
@@ -23,17 +23,20 @@ function AppLayout() {
 function NotFoundPage() { return <h1>Error 404 - Not Found</h1>; }
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
   return (
     <>
       <BrowserRouter>
         <Routes>
 
-          <Route element={<AppLayout />}>
+          <Route path='/' element={<AppLayout />}>
 
-            <Route path='/' element={<InstructionPage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/game' element={<GamePage />} />
-            <Route path='/scores' element={<RankingPage />} />
+            <Route index element={<InstructionPage />} />
+            <Route path='login' element={<LoginPage />} />
+            <Route path='game' element={<GamePage />} />
+            <Route path='scores' element={<RankingPage />} />
             <Route path='*' element={<NotFoundPage />} />
 
           </Route>
