@@ -57,7 +57,7 @@ app.post('/api/sessions', (req, res, next) => {
 
 app.delete('/api/sessions/current', (req, res) => {
   if (req.isAuthenticated()) {
-    res.logout(() => {
+    req.logout(() => {
       res.end();
     });
   }
