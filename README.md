@@ -79,6 +79,32 @@ DELETE `/api/sessions/current`
 ### Game API
 
 GET `/api/network`
+  ```json
+  req: {
+    method: "GET"
+  }
+  ```
+  ```json
+  res(200 OK): {
+    network: {
+        stations: [{
+            SID: _SID,
+            Name: _Name
+        }, ...],
+
+        lines: [{
+            LID: _LID,
+            Name: _Name
+        }, ...],
+
+        segments: [{
+            from: currentStop.SID,
+            to: nextStop.SID,
+            lineId: currentStop.LID
+        }, ...],
+    }
+  }
+  ```
 
 GET `/api/game/setup`
 

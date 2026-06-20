@@ -1,8 +1,9 @@
 import express from "express";
-import sqlite3 from 'sqlite3';
+import db from './db.js';
 import session from 'express-session';
 import cors from 'cors';
 import passport from './passport.js';
+import { getNetwork } from './network_dao.js';
 
 const app = express();
 const port = 3001;
@@ -22,14 +23,6 @@ app.use(passport.authenticate('session'));
 
 app.use(express.json());
 
-const db = new sqlite3.Database('last_race.db', (err) => {
-  if (err) {
-    console.error(`Database connection failed: ${err.message}`);
-  } else {
-    console.log("Successfully connected to the SQLite database!");
-  }
-});
-
 // --- Authentication APIs ---
 
 app.get('/api/sessions/current', (req, res) => {
@@ -40,7 +33,7 @@ app.get('/api/sessions/current', (req, res) => {
   }
 });
 
-app.post('/api/sessions', (req, res, next) => {
+app.post('/api/sessions', (req, res) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return res.status(500).json({ error: "Internal Server Error" });
 
@@ -53,7 +46,7 @@ app.post('/api/sessions', (req, res, next) => {
       if (err) return res.status(500).json({ error: "Internal Server Error" });
       return res.json(req.user);
     });
-  })(req, res, next);
+  })(req, res);
 });
 
 app.delete('/api/sessions/current', (req, res) => {
@@ -70,6 +63,17 @@ const isLoggedIn = (req, res, next) => {
   }
   return res.status(401).json({ error: "Unauthenticated user." });
 }
+
+// --- Game APIs ---
+
+app.get('/api/network', isLoggedIn, async (req, res) => {
+  try {
+    const network = await getNetwork();
+    res.status(200).json(network);
+  } catch (err) {
+    res.status(500).json({ error: "Network retrival error." });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
