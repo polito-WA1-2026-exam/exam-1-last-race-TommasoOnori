@@ -14,8 +14,8 @@ async function logIn(credentials) {
         const user = await response.json();
         return user;
     } else {
-        const errMessage = await response.text();
-        throw new Error(errMessage);
+        const errMessage = await response.json();
+        throw new Error(errMessage.error);
     }
 }
 
@@ -24,7 +24,30 @@ async function logOut() {
         method: 'DELETE',
         credentials: 'include'
     })
+
+    if (!response.ok) {
+        throw new Error("Error during logout.")
+    }
 }
 
-const API = { logIn, logOut }
+async function getCurrentUser() {
+    const response = await fetch(`${serverURL}/api/sessions/current`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+        const currentUser = await response.json();
+        if (currentUser) {
+            return currentUser;
+        } else {
+            throw new Error("No active session.");
+        }
+    } else {
+        const errMessage = await response.json();
+        throw new Error(errMessage);
+    }
+}
+
+const API = { logIn, logOut, getCurrentUser };
 export default API;

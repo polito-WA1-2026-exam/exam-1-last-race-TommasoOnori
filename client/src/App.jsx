@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import MyNavbar from './components/MyNavbar';
 import InstructionsPage from './components/pages/InstructionsPage';
@@ -26,6 +26,24 @@ function NotFoundPage() { return <h1>Error 404 - Not Found</h1>; }
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const currentUser = await API.getCurrentUser();
+        setLoggedIn(true);
+        setUser(currentUser);
+      } catch (err) {
+        if (err.message !== "No active session.") {
+          console.error(err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
+  }, []);
 
   const handleLogin = async (credentials) => {
     try {
@@ -45,6 +63,14 @@ function App() {
     } catch (err) {
       throw err;
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <h3>Loading Last Race...</h3>
+      </div>
+    );
   }
 
   return (

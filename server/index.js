@@ -36,20 +36,21 @@ app.get('/api/sessions/current', (req, res) => {
   if (req.isAuthenticated()) {
     res.json(req.user);
   } else {
-    res.status(401).json({ error: "Unauthenticated user." });
+    res.json(null);
   }
 });
 
 app.post('/api/sessions', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
+    if (err) return res.status(500).json({ error: "Internal Server Error" });
 
     if (!user) {
-      return res.status(401).json({ error: info });
+      console.log(info.message);
+      return res.status(401).json({ error: info.message });
     }
 
     req.login(user, (err) => {
-      if (err) return next(err);
+      if (err) return res.status(500).json({ error: "Internal Server Error" });
       return res.json(req.user);
     });
   })(req, res, next);
@@ -58,7 +59,7 @@ app.post('/api/sessions', (req, res, next) => {
 app.delete('/api/sessions/current', (req, res) => {
   if (req.isAuthenticated()) {
     req.logout(() => {
-      res.end();
+      res.status(200).end();
     });
   }
 });
