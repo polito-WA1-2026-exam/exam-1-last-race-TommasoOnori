@@ -15,8 +15,9 @@ function LoginPage({ handleLogin }) {
 
         handleLogin({ username, password }).then(() => {
             navigate('/');
+            setErrMessage('');
         }).catch((err) => {
-            setErrMessage("Invalid credentials.");
+            setErrMessage(err.message);
         });
     }
 

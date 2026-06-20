@@ -28,14 +28,14 @@ export const getUser = (email, password) => {
                 crypto.scrypt(password, row.Salt, 32, (err, hashedPassword) => {
                     if (err) {
                         reject(err);
-                    }
-
-                    const passwordHex = Buffer.from(row.HashedPassword, 'hex');
-
-                    if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) {
-                        resolve(false); // Wrong Password
                     } else {
-                        resolve(user);
+                        const passwordHex = Buffer.from(row.HashedPassword, 'hex');
+
+                        if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) {
+                            resolve(false); // Wrong Password
+                        } else {
+                            resolve(user);
+                        }
                     }
                 });
             }
@@ -51,7 +51,7 @@ export const getUserByID = (id) => {
             if (err) {
                 reject(err);
             } else if (row == undefined) {
-                resolve({ error: "User Not Found." });
+                resolve(false);
             } else {
                 const user = {
                     id: row.PID,
