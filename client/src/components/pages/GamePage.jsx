@@ -15,6 +15,9 @@ function GamePage() {
 
     const [timerValue, setTimerValue] = useState(90);
 
+    const [events, setEvents] = useState([]);
+    const [score, setScore] = useState(20);
+
     useEffect(() => {
         const fetchSegments = async () => {
             try {
@@ -37,8 +40,7 @@ function GamePage() {
                     setTimerValue(timeLeft => timeLeft - 1)
                 }, 1000);
             } else if (timerValue === 0) {
-                setGamePhase('game_execution');
-                // Game Executio API
+                handleGameExecution();
             }
         }
 
@@ -70,6 +72,24 @@ function GamePage() {
             setSelectedRoute((oldRoute) => {
                 return [...oldRoute, segmentToAdd];
             })
+        }
+    };
+
+    const handleGameExecution = async () => {
+        try {
+            console.log(selectedRoute);
+            const result = await API.setGameRoute(selectedRoute, endpoints);
+
+            if (result.valid) {
+                setEvents(result.events);
+                setScore(result.score);
+                setGamePhase('game_execution');
+            } else {
+                setScore(result.score);
+                setGamePhase('game_results');
+            }
+        } catch (err) {
+            setErrMessage(err.message);
         }
     };
 
@@ -150,7 +170,7 @@ function GamePage() {
                                     return (
                                         <tr
                                             key={index}
-                                            onClick={() => { handleSegmentClick(segment, isSelected) }}
+                                            onClick={() => { handleSegmentClick(segment, isSelected); }}
                                             style={{
                                                 cursor: isSelected ? 'not-allowed' : 'pointer',
                                                 opacity: isSelected ? 0.5 : 1,
@@ -181,8 +201,7 @@ function GamePage() {
 
                     <Col>
                         <Button onClick={() => {
-                            setGamePhase('game_execution');
-                            // API call Post Game
+                            handleGameExecution();
                         }}>Validate Route!</Button>
                     </Col>
                     <Col>
@@ -196,6 +215,7 @@ function GamePage() {
 
             {gamePhase === "game_execution" && <Container>
                 {console.log(gamePhase)}
+                {console.log(events, score)};
             </Container>}
 
             {gamePhase === "game_results" && <Container>

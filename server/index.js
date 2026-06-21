@@ -4,6 +4,7 @@ import session from 'express-session';
 import cors from 'cors';
 import passport from './passport.js';
 import { getStations, getLines, getSegments, getEndpointStations } from './network_dao.js';
+import { getEvents } from './events_dao.js';
 
 const app = express();
 const port = 3001;
@@ -79,8 +80,51 @@ app.get('/api/game/setup', isLoggedIn, async (req, res) => {
     const endpoints = await getEndpointStations();
     res.status(200).json(endpoints);
   } catch (err) {
-    res.status(500).json({ error: "Network retrieval error." })
+    res.status(500).json({ error: "Endpoints retrieval error." })
   }
+});
+
+app.post('/api/games', isLoggedIn, async (req, res) => {
+  const { route, endpoints } = req.body;
+
+  if (!route || route.length == 0) return res.status(200).json({ valid: false, finalScore: 0 });
+
+  const [start, end] = endpoints
+
+  if (route[0].from !== start || route[route.length - 1].to !== end) {
+    return res.status(200).json({ valid: false, finalScore: 0 });
+  }
+
+  for (let i = 0; i < route.length - 1; i++) {
+    if (route[i].to !== route[i + 1].from) {
+      return res.status(200).json({ valid: false, finalScore: 0 });
+    }
+  }
+
+  try {
+    const allEvents = await getEvents();
+    let routeEvents = [];
+
+    for (const segment of route) {
+      routeEvents.push(allEvents[Math.floor(Math.random() * allEvents.length)]);
+    }
+
+    const INITIAL_SCORE = 20;
+    let finScore = INITIAL_SCORE;
+
+    for (const event of routeEvents) {
+      finScore += event.value;
+    }
+
+    return res.status(200).json({
+      valid: true,
+      events: routeEvents,
+      finalScore: finScore
+    })
+  } catch (err) {
+    return res.status(500).json({ error: "Events retrieval error." })
+  }
+
 });
 
 app.listen(port, () => {

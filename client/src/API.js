@@ -79,5 +79,27 @@ async function getEndpoints() {
     }
 }
 
-const API = { logIn, logOut, getCurrentUser, getNetworkTopology, getEndpoints };
+async function setGameRoute(selectedRoute, _endpoints) {
+    const response = await fetch(`${serverURL}/api/games`, {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json"
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            route: selectedRoute,
+            endpoints: _endpoints
+        })
+    })
+
+    if (response.ok) {
+        const result = await response.json();
+        return result;
+    } else {
+        const errMessage = await response.json();
+        throw new Error(errMessage.error);
+    }
+}
+
+const API = { logIn, logOut, getCurrentUser, getNetworkTopology, getEndpoints, setGameRoute };
 export default API;
