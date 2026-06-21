@@ -104,11 +104,66 @@ GET `/api/network`
         }, ...],
     }
   }
+
+  res(500 Server Error): {
+    error: "Network retrieval error."
+  }
   ```
 
 GET `/api/game/setup`
+  ```json
+  req: {
+    method: "GET"
+  }
+  ```
+  ```json
+  res(200 OK): {
+    endpoints: [
+      startStation,
+      endStation
+    ]
+  }
 
-POST `/api/game`
+  res(500 Server Error): {
+    error: "Endpoints retrieval error."
+  }
+  ```
+
+POST `/api/games`
+```json
+  req: {
+    method: "POST",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: {
+      route: _selectedRoute,
+      endpoints: _endpoints
+    }
+  }
+  ```
+  ```json
+  res(200 OK): {
+    valid: true,
+    events: [
+      {
+        name: _Name,
+        description: _Description,
+        value: _value
+      }, ...
+    ],
+    finalScore: _score
+  }
+
+  res(200 OK): {
+    valid: false,
+    finalScore: 0
+  }
+
+  res(500 Server Error): {
+    error: "Events retrieval error."
+  }
+  ```
 
 GET `/api/ranking`
 
