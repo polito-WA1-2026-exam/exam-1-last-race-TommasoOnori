@@ -3,7 +3,7 @@ import db from './db.js';
 import session from 'express-session';
 import cors from 'cors';
 import passport from './passport.js';
-import { getNetwork } from './network_dao.js';
+import { getStations, getLines, getSegments, getEndpointStations } from './network_dao.js';
 
 const app = express();
 const port = 3001;
@@ -38,7 +38,6 @@ app.post('/api/sessions', (req, res) => {
     if (err) return res.status(500).json({ error: "Internal Server Error" });
 
     if (!user) {
-      console.log(info.message);
       return res.status(401).json({ error: info.message });
     }
 
@@ -66,12 +65,21 @@ const isLoggedIn = (req, res, next) => {
 
 // --- Game APIs ---
 
-app.get('/api/network', isLoggedIn, async (req, res) => {
+app.get('/api/network/topology', isLoggedIn, async (req, res) => {
   try {
-    const network = await getNetwork();
-    res.status(200).json(network);
+    const segments = await getSegments();
+    res.status(200).json({ segments });
   } catch (err) {
-    res.status(500).json({ error: "Network retrival error." });
+    res.status(500).json({ error: "Network retrieval error." });
+  }
+});
+
+app.get('/api/game/setup', isLoggedIn, async (req, res) => {
+  try {
+    const endpoints = await getEndpointStations();
+    res.status(200).json(endpoints);
+  } catch (err) {
+    res.status(500).json({ error: "Network retrieval error." })
   }
 });
 

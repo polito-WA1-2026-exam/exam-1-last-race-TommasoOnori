@@ -49,5 +49,35 @@ async function getCurrentUser() {
     }
 }
 
-const API = { logIn, logOut, getCurrentUser };
+async function getNetworkTopology() {
+    const response = await fetch(`${serverURL}/api/network/topology`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+        const segments = await response.json();
+        return segments;
+    } else {
+        const errMessage = await response.json();
+        throw new Error(errMessage.error);
+    }
+}
+
+async function getEndpoints() {
+    const response = await fetch(`${serverURL}/api/game/setup`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+        const endpoints = await response.json();
+        return endpoints;
+    } else {
+        const errMessage = await response.json();
+        throw new Error(errMessage.error);
+    }
+}
+
+const API = { logIn, logOut, getCurrentUser, getNetworkTopology, getEndpoints };
 export default API;
