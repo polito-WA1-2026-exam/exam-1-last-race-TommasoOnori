@@ -3,8 +3,11 @@ import db from './db.js';
 import session from 'express-session';
 import cors from 'cors';
 import passport from './passport.js';
+import dayjs from 'day.js';
+
 import { getStations, getLines, getSegments, getEndpointStations } from './network_dao.js';
 import { getEvents } from './events_dao.js';
+import { insertGame } from './games_dao.js';
 
 const app = express();
 const port = 3001;
@@ -85,19 +88,31 @@ app.get('/api/game/setup', isLoggedIn, async (req, res) => {
 });
 
 app.post('/api/games', isLoggedIn, async (req, res) => {
+  const saveGameAndRespond = (score, valid, events = []) => {
+    const userId = req.user.id;
+    const currentDate = dayjs().format('YYYY-MM-DD HH:MM:00');
+
+    try {
+      await insertGame(uid, score, currentDate);
+      return res.status(200).json({ valid, events, finalScore: score });
+    } catch (err) {
+      return res.status(500).json({ error: "Database game-insertion error." })
+    }
+  };
+
   const { route, endpoints } = req.body;
 
-  if (!route || route.length == 0) return res.status(200).json({ valid: false, finalScore: 0 });
+  if (!route || route.length == 0) return saveGameAndRespond(0, false);
 
   const [start, end] = endpoints
 
   if (route[0].from !== start || route[route.length - 1].to !== end) {
-    return res.status(200).json({ valid: false, finalScore: 0 });
+    return saveGameAndRespond(0, false);
   }
 
   for (let i = 0; i < route.length - 1; i++) {
     if (route[i].to !== route[i + 1].from) {
-      return res.status(200).json({ valid: false, finalScore: 0 });
+      return saveGameAndRespond(0, false);
     }
   }
 
@@ -110,19 +125,15 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
     }
 
     const INITIAL_SCORE = 20;
-    let finScore = INITIAL_SCORE;
+    let finalScore = INITIAL_SCORE;
 
     for (const event of routeEvents) {
-      finScore += event.value;
+      finalScore += event.value;
     }
 
-    return res.status(200).json({
-      valid: true,
-      events: routeEvents,
-      finalScore: finScore
-    })
+    return saveGameAndRespond(finalScore, true, routeEvents);
   } catch (err) {
-    return res.status(500).json({ error: "Events retrieval error." })
+    return res.status(500).json({ error: "Events retrieval error." });
   }
 
 });
