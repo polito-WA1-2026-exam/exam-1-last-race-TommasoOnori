@@ -9,8 +9,11 @@ function GamePage() {
     const [gamePhase, setGamePhase] = useState('game_setup');
     const [segments, setSegments] = useState(null);
     const [errMessage, setErrMessage] = useState('');
+
     const [endpoints, setEndpoints] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState([]);
+
+    const [timerValue, setTimerValue] = useState(90);
 
     useEffect(() => {
         const fetchSegments = async () => {
@@ -24,6 +27,25 @@ function GamePage() {
         };
         fetchSegments();
     }, []);
+
+    useEffect(() => {
+        let timer = null;
+
+        if (gamePhase === "game_planning") {
+            if (timerValue > 0) {
+                timer = setTimeout(() => {
+                    setTimerValue(timeLeft => timeLeft - 1)
+                }, 1000);
+            } else if (timerValue === 0) {
+                setGamePhase('game_execution');
+                // Game Executio API
+            }
+        }
+
+
+        return () => clearTimeout(timer);
+
+    }, [gamePhase, timerValue]);
 
     const handleSegmentClick = (segment, isAlreadySelected) => {
         if (!isAlreadySelected) {
@@ -100,7 +122,21 @@ function GamePage() {
                     />
                 </div>
 
-                <h3 className="text-center mb-4">From "{endpoints[0]}" to "{endpoints[1]}"</h3>
+                <Row>
+                    <Col>
+                        <Container>
+                            <h3 className="text-center mt-2">From "{endpoints[0]}" to "{endpoints[1]}"</h3>
+                        </Container>
+                    </Col>
+
+                    <Col>
+                        {timerValue <= 15 ? (
+                            <Alert variant="danger">Time Left: {Math.floor(timerValue / 60)}:{Math.floor(timerValue % 60)}</Alert>
+                        ) : (
+                            <Alert variant="warning">Time Left: {Math.floor(timerValue / 60)}:{Math.floor(timerValue % 60)}</Alert>
+                        )}
+                    </Col>
+                </Row>
 
                 <Row className="mb-4">
                     <Col lg={8}>
