@@ -3,7 +3,7 @@ import db from './db.js';
 import session from 'express-session';
 import cors from 'cors';
 import passport from './passport.js';
-import dayjs from 'day.js';
+import dayjs from 'dayjs';
 
 import { getStations, getLines, getSegments, getEndpointStations } from './network_dao.js';
 import { getEvents } from './events_dao.js';
@@ -27,7 +27,7 @@ app.use(passport.authenticate('session'));
 
 app.use(express.json());
 
-// --- Authentication APIs ---
+// ===== Authentication APIs =====
 
 app.get('/api/sessions/current', (req, res) => {
   if (req.isAuthenticated()) {
@@ -67,7 +67,7 @@ const isLoggedIn = (req, res, next) => {
   return res.status(401).json({ error: "Unauthenticated user." });
 }
 
-// --- Game APIs ---
+// ===== Game APIs =====
 
 app.get('/api/network/topology', isLoggedIn, async (req, res) => {
   try {
@@ -88,12 +88,12 @@ app.get('/api/game/setup', isLoggedIn, async (req, res) => {
 });
 
 app.post('/api/games', isLoggedIn, async (req, res) => {
-  const saveGameAndRespond = (score, valid, events = []) => {
+  const saveGameAndRespond = async (score, valid, events = []) => {
     const userId = req.user.id;
-    const currentDate = dayjs().format('YYYY-MM-DD HH:MM:00');
+    const currentDate = dayjs().format('YYYY-MM-DD HH:mm:00');
 
     try {
-      await insertGame(uid, score, currentDate);
+      await insertGame(userId, score, currentDate);
       return res.status(200).json({ valid, events, finalScore: score });
     } catch (err) {
       return res.status(500).json({ error: "Database game-insertion error." })
@@ -102,17 +102,17 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
 
   const { route, endpoints } = req.body;
 
-  if (!route || route.length == 0) return saveGameAndRespond(0, false);
+  if (!route || route.length == 0) return await saveGameAndRespond(0, false);
 
   const [start, end] = endpoints
 
   if (route[0].from !== start || route[route.length - 1].to !== end) {
-    return saveGameAndRespond(0, false);
+    return await saveGameAndRespond(0, false);
   }
 
   for (let i = 0; i < route.length - 1; i++) {
     if (route[i].to !== route[i + 1].from) {
-      return saveGameAndRespond(0, false);
+      return await saveGameAndRespond(0, false);
     }
   }
 
@@ -128,14 +128,17 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
     let finalScore = INITIAL_SCORE;
 
     for (const event of routeEvents) {
-      finalScore += event.value;
+      finalScore += event.Value;
     }
 
-    return saveGameAndRespond(finalScore, true, routeEvents);
+    if (finalScore < 0) {
+      finalScore = 0;
+    }
+
+    return await saveGameAndRespond(finalScore, true, routeEvents);
   } catch (err) {
     return res.status(500).json({ error: "Events retrieval error." });
   }
-
 });
 
 app.listen(port, () => {

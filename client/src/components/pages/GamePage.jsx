@@ -18,6 +18,8 @@ function GamePage() {
     const [events, setEvents] = useState([]);
     const [score, setScore] = useState(20);
 
+    const [currentAnimStep, setCurrentAnimStep] = useState(0);
+
     useEffect(() => {
         const fetchSegments = async () => {
             try {
@@ -48,6 +50,26 @@ function GamePage() {
         return () => clearTimeout(timer);
 
     }, [gamePhase, timerValue]);
+
+    useEffect(() => {
+        if (gamePhase === "game_execution" && events.length > 0) {
+            if (currentAnimStep < events.length) {
+                const timer = setTimeout(() => {
+                    setScore((oldScore) => {
+                        return oldScore + events[currentAnimStep].Value;
+                    })
+
+                    if (score < 0) {
+                        setScore(0);
+                    }
+
+                    setCurrentAnimStep(oldAnimStep => oldAnimStep + 1);
+                }, 1500);
+
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [gamePhase, currentAnimStep]);
 
     const handleSegmentClick = (segment, isAlreadySelected) => {
         if (!isAlreadySelected) {
@@ -82,15 +104,19 @@ function GamePage() {
 
             if (result.valid) {
                 setEvents(result.events);
-                setScore(result.score);
+                // setScore(result.score);
                 setGamePhase('game_execution');
             } else {
-                setScore(result.score);
+                // setScore(result.score);
                 setGamePhase('game_results');
             }
         } catch (err) {
             setErrMessage(err.message);
         }
+    };
+
+    const handleGameResults = () => {
+        setGamePhase('game_results');
     };
 
     if (errMessage) {
@@ -214,15 +240,44 @@ function GamePage() {
             </Container>}
 
             {gamePhase === "game_execution" && <Container>
-                {console.log(gamePhase)}
-                {console.log(events, score)};
-            </Container>}
+                <h2 className="text-center mb-4">Getting around by subway...</h2>
+                <h3 className="text-center mb-4">Current Coins: {score}</h3>
+                <Table striped>
+                    <thead>
+                        <tr>
+                            <th>Segment</th>
+                            <th>Event</th>
+                            <th>Description</th>
+                            <th>Value</th>
+                        </tr>
 
-            {gamePhase === "game_results" && <Container>
-                {console.log(gamePhase)}
-            </Container>}
+                    </thead>
+                    <tbody>
+                        {events.slice(0, currentAnimStep).map((event, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{selectedRoute[index].from} &rarr; {selectedRoute[index].to}</td>
+                                    <td>{event.Name}</td>
+                                    <td>{event.Description}</td>
+                                    <td>{event.Value}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </Table>
 
-        </Container>
+                <Button className="mt-3" onClick={() => {
+                    handleGameResults();
+                }}>View Results!</Button>
+            </Container >}
+
+            {
+                gamePhase === "game_results" && <Container>
+                    {console.log(gamePhase)}
+                </Container>
+            }
+
+        </Container >
     );
 }
 

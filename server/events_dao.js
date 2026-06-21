@@ -6,7 +6,6 @@ export const getEvents = () => {
 
         db.all(queryEvents, [], (err, events) => {
             if (err) return reject(err);
-            console.log(events);
             return resolve(events);
         });
     });
