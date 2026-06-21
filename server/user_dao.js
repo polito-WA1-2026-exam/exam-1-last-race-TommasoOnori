@@ -1,11 +1,5 @@
-import sqlite3 from 'sqlite3';
+import db from './db.js';
 import crypto from 'crypto';
-
-const db = new sqlite3.Database('last_race.db', (err) => {
-    if (err) {
-        console.error(`Database connection failed: ${err}`);
-    }
-});
 
 export const getUser = (email, password) => {
     return new Promise((resolve, reject) => {
