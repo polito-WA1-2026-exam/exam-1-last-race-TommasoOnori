@@ -53,21 +53,19 @@ function GamePage() {
 
     useEffect(() => {
         if (gamePhase === "game_execution" && events.length > 0) {
+            let timer = null;
+
             if (currentAnimStep < events.length) {
-                const timer = setTimeout(() => {
-                    setScore((oldScore) => {
-                        return oldScore + events[currentAnimStep].Value;
-                    })
-
-                    if (score < 0) {
-                        setScore(0);
-                    }
-
+                timer = setTimeout(() => {
                     setCurrentAnimStep(oldAnimStep => oldAnimStep + 1);
                 }, 1500);
-
-                return () => clearTimeout(timer);
+            } else {
+                timer = setTimeout(() => {
+                    setGamePhase('game_results');
+                }, 2000);
             }
+
+            return () => clearTimeout(timer);
         }
     }, [gamePhase, currentAnimStep]);
 
@@ -99,24 +97,19 @@ function GamePage() {
 
     const handleGameExecution = async () => {
         try {
-            console.log(selectedRoute);
             const result = await API.setGameRoute(selectedRoute, endpoints);
 
             if (result.valid) {
                 setEvents(result.events);
-                // setScore(result.score);
+                setScore(result.finalScore);
                 setGamePhase('game_execution');
             } else {
-                // setScore(result.score);
+                setScore(result.finalScore);
                 setGamePhase('game_results');
             }
         } catch (err) {
             setErrMessage(err.message);
         }
-    };
-
-    const handleGameResults = () => {
-        setGamePhase('game_results');
     };
 
     if (errMessage) {
@@ -241,7 +234,7 @@ function GamePage() {
 
             {gamePhase === "game_execution" && <Container>
                 <h2 className="text-center mb-4">Getting around by subway...</h2>
-                <h3 className="text-center mb-4">Current Coins: {score}</h3>
+                <h3 className="text-center mb-4">Starting Coins: 20</h3>
                 <Table striped>
                     <thead>
                         <tr>
@@ -259,21 +252,33 @@ function GamePage() {
                                     <td>{selectedRoute[index].from} &rarr; {selectedRoute[index].to}</td>
                                     <td>{event.Name}</td>
                                     <td>{event.Description}</td>
-                                    <td>{event.Value}</td>
+                                    <td><b>{event.Value} Coins</b></td>
                                 </tr>
                             );
                         })}
                     </tbody>
                 </Table>
-
-                <Button className="mt-3" onClick={() => {
-                    handleGameResults();
-                }}>View Results!</Button>
             </Container >}
 
             {
                 gamePhase === "game_results" && <Container>
-                    {console.log(gamePhase)}
+                    <h2>Your Final Score!</h2>
+
+                    <h3 className="mt-3">{score} coins collected on the journey!</h3>
+
+                    <Button className="mt-3" onClick={() => {
+                        setGamePhase('game_setup');
+
+                        setEndpoints([]);
+                        setSelectedRoute([]);
+
+                        setTimerValue(90);
+
+                        setEvents([]);
+                        setScore(20);
+
+                        setCurrentAnimStep(0);
+                    }}>Play a New Game!</Button>
                 </Container>
             }
 
