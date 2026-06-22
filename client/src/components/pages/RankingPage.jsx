@@ -40,7 +40,7 @@ function RankingPage() {
                             <tr>
                                 <th>Rank</th>
                                 <th>Player</th>
-                                <th>Maximum Score</th>
+                                <th>Best Score</th>
                             </tr>
                         </thead>
                         <tbody>

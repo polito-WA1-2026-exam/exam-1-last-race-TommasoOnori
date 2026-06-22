@@ -116,6 +116,19 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
     }
   }
 
+  for (let i = 0; i < route.length; i++) {
+    for (let j = 0; j < route.length; j++) {
+      if (j != i) {
+        const s1 = route[i];
+        const s2 = route[j];
+
+        if ((s1.from === s2.from && s1.to === s2.to) || (s1.from === s2.to && s1.to === s2.from)) {
+          return await saveGameAndRespond(0, false);
+        }
+      }
+    }
+  }
+
   try {
     const allEvents = await getEvents();
     let routeEvents = [];

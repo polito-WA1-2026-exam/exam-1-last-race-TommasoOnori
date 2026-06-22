@@ -61,11 +61,11 @@ function GamePage() {
             if (currentAnimStep < events.length) {
                 timer = setTimeout(() => {
                     setCurrentAnimStep(oldAnimStep => oldAnimStep + 1);
-                }, 1500);
+                }, 2000);
             } else {
                 timer = setTimeout(() => {
                     setGamePhase('game_results');
-                }, 2000);
+                }, 3000);
             }
 
             return () => clearTimeout(timer);
@@ -187,7 +187,7 @@ function GamePage() {
                             <tbody>
                                 {segments.map((segment, index) => {
                                     const isSelected = selectedRoute.some((s) => {
-                                        return s.from === segment.from && s.to === segment.to
+                                        return (s.from === segment.from && s.to === segment.to) || (s.from === segment.to && s.to === segment.from);
                                     });
                                     return (
                                         <tr
