@@ -9,10 +9,10 @@ import GamePage from './components/pages/GamePage';
 import RankingPage from './components/pages/RankingPage';
 import API from './API'
 
-function AppLayout({ loggedIn, handleLogout }) {
+function AppLayout({ loggedIn, user, handleLogout }) {
   return (
     <>
-      <MyNavbar loggedIn={loggedIn} handleLogout={handleLogout} />
+      <MyNavbar loggedIn={loggedIn} user={user} handleLogout={handleLogout} />
 
       <main className="container mt-4">
         <Outlet />
@@ -78,7 +78,7 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          <Route path="/" element={<AppLayout loggedIn={loggedIn} handleLogout={handleLogout} />}>
+          <Route path="/" element={<AppLayout loggedIn={loggedIn} user={user} handleLogout={handleLogout} />}>
 
             <Route index element={<InstructionsPage loggedIn={loggedIn} />} />
 
