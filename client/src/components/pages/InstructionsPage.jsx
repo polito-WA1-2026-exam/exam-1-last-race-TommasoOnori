@@ -41,7 +41,16 @@ function InstructionPage({ loggedIn }) {
                     </div>
 
                     {loggedIn ? (
-                        <Button variant="primary" className="mb-4" onClick={() => { navigate('/game') }}>Start New Game!</Button>
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <Button variant="primary" className="mb-4" onClick={() => { navigate('/game') }}>Start New Game!</Button>
+                                </Col>
+                                <Col>
+                                    <Button variant="warning" className="mb-4" onClick={() => { navigate('/scores') }}>Show Ranking!</Button>
+                                </Col>
+                            </Row>
+                        </Container>
                     ) : (
                         <Button variant="primary" className="mb-4" onClick={() => { navigate('/login') }}>Sing in to Play!</Button>
                     )

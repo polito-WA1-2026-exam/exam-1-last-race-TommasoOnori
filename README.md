@@ -200,25 +200,33 @@ GET `/api/ranking`
 
 `LoginPage`
   - Purpose: Allowing access to protected routes.
-  - Functionality: Provides a login form where the user can sumbit credentials to authenticate.
+  - Functionality: Displays the game rules and dynamically renders a login button for anonymous users, or links to start a game and view the leaderboard for authenticated players.
 
 `InstructionsPage`:
-  - Purpose:
-  - Functionality:
+  - Purpose: Provides game's rule to any type of user.
+  - Functionality: Displays the game rules and a button to sign in if unauthenticated, or to start a game and view rank if authenticated
 
 `GamePage`:
-  - Purpose:
-  - Functionality:
+  - Purpose: Hosts the core gameplay and manages the internal state for the different phases of a match.
+  - Functionality: <br> Allows authenticated users to:
+    1. View the metro network map (`SetupPhasePage`).
+    2. Plan a route between two assigned stations within a 90-second timer and submit the route for validation (`PlanningPhasePage`).
+    3. See the execution of the journey with unexpected events (`ExecutionPhasePage`)
+    4. View the final score (`ResultsPhasePage`).
 
 `RankingPage`:
-  - Purpose:
-  - Functionality:
-
-(only _main_ components, minor ones may be skipped)
+  - Purpose: Displays the general leaderboard of the application.
+  - Functionality: Retrieves from the server and shows a ranking table containing the best score achieved by each registered player
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+### Ranking Page
+![Screenshot](./client/src/assets/Ranking_Screenshot.png)
+
+### Game Page
+![Screenshot](./client/src/assets/Game_Screenshot_1.png)
+![Screenshot](./client/src/assets/Game_Screenshot_2.png)
+![Screenshot](./client/src/assets/Game_Screenshot_3.png)
 
 ## Users Credentials
 
@@ -238,5 +246,5 @@ User "Tommaso Onori":
 ```
 
 ## Use of AI Tools
-Briefly describe whether you used any AI tools (e.g., ChatGPT, GitHub Copilot, Claude) while working on this project, for which purposes (e.g., clarifying concepts, debugging, generating code), and how you verified or adapted their output.
-If you did not use any AI tools, simply state so.
+During the development of this project, I utilized AI tools for CSS styling across the entire application, ensuring a coherent design. Additionally, inside the `InstructionPage` component, the regulation text has been generated and styled using AI.
+On the database side, I used AI as technical reference to help me construct the queries, especially with the `RANK()` operator.

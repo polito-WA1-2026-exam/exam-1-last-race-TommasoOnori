@@ -18,8 +18,9 @@ function MyNavbar({ loggedIn, user, handleLogout }) {
                             <Navbar.Text>
                                 <span className="me-3">Hello, {user?.name}!</span>
                                 <Button onClick={() => {
+                                    navigate('/');
+
                                     handleLogout().then(() => {
-                                        navigate('/');
                                         setErrMessage('');
                                     }).catch((err) => {
                                         setErrMessage(err.message);

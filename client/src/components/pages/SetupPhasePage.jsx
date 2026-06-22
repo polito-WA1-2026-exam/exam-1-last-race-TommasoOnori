@@ -40,7 +40,7 @@ function SetupPhasePage({ segments, setSegments, setErrMessage, setGamePhase, se
                 />
             </div>
 
-            <Button onClick={async () => {
+            <Button className="mb-4" onClick={async () => {
                 const ep = await API.getEndpoints();
                 setEndpoints(ep);
                 setGamePhase('game_planning');
