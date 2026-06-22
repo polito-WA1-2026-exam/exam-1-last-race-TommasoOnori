@@ -24,9 +24,7 @@ GET `/api/sessions/current`
     id: "_id",
     name: "mock_name",
     surname: "mock_surname",
-    username: "mock_username",
-    email: "mock_email",
-    bestScore: "mock_score"
+    email: "mock_email"
   }
 
   res(401 Unauthorized): {
@@ -52,9 +50,7 @@ POST `/api/sessions`
     id: "_id",
     name: "mock_name",
     surname: "mock_surname",
-    username: "mock_username",
-    email: "mock_email",
-    bestScore: "mock_score"
+    email: "mock_email"
   }
 
   res(401 Unauthorized): {

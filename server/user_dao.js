@@ -15,7 +15,6 @@ export const getUser = (email, password) => {
                     id: row.PID,
                     name: row.Name,
                     surname: row.Surname,
-                    bestScore: row.BestScore,
                     email: row.Email
                 }
 
@@ -51,7 +50,6 @@ export const getUserByID = (id) => {
                     id: row.PID,
                     name: row.Name,
                     surname: row.Surname,
-                    bestScore: row.BestScore,
                     email: row.Email
                 }
 

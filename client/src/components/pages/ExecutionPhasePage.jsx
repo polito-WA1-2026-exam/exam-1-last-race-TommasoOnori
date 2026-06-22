@@ -11,11 +11,11 @@ function ExecutionPhasePage({ gamePhase, setGamePhase, events, selectedRoute }) 
             if (currentAnimStep < events.length) {
                 timer = setTimeout(() => {
                     setCurrentAnimStep(oldAnimStep => oldAnimStep + 1);
-                }, 2000);
+                }, 3000);
             } else {
                 timer = setTimeout(() => {
                     setGamePhase('game_results');
-                }, 3000);
+                }, 4000);
             }
 
             return () => clearTimeout(timer);
