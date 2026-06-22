@@ -15,7 +15,7 @@ function ExecutionPhasePage({ gamePhase, setGamePhase, events, selectedRoute }) 
             } else {
                 timer = setTimeout(() => {
                     setGamePhase('game_results');
-                }, 4000);
+                }, 6000);
             }
 
             return () => clearTimeout(timer);
