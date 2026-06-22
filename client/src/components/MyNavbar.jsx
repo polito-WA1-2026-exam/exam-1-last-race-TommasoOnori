@@ -16,6 +16,7 @@ function MyNavbar({ loggedIn, handleLogout }) {
 
                     {loggedIn ?
                         (
+
                             <Button onClick={() => {
                                 handleLogout().then(() => {
                                     navigate('/');
@@ -24,6 +25,7 @@ function MyNavbar({ loggedIn, handleLogout }) {
                                     setErrMessage(err.message);
                                 });
                             }}>Log Out</Button>
+
                         ) : (
                             <Button as={Link} to="/login">Log In</Button>
                         )

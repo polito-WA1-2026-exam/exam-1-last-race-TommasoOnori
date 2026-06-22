@@ -1,5 +1,6 @@
 import { Container, Row, Col, Button, Alert, Table } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../../API.js';
 
 import MovieMetroNetwork from '../../assets/MovieMetroNetwork.svg';
@@ -19,6 +20,8 @@ function GamePage() {
     const [score, setScore] = useState(20);
 
     const [currentAnimStep, setCurrentAnimStep] = useState(0);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSegments = async () => {
@@ -264,21 +267,31 @@ function GamePage() {
                 gamePhase === "game_results" && <Container>
                     <h2>Your Final Score!</h2>
 
-                    <h3 className="mt-3">{score} coins collected on the journey!</h3>
+                    <h3 className="mt-5 mb-5">{score} coins collected on the journey!</h3>
 
-                    <Button className="mt-3" onClick={() => {
-                        setGamePhase('game_setup');
+                    <Row>
+                        <Col>
+                            <Button onClick={() => {
+                                setGamePhase('game_setup');
 
-                        setEndpoints([]);
-                        setSelectedRoute([]);
+                                setEndpoints([]);
+                                setSelectedRoute([]);
 
-                        setTimerValue(90);
+                                setTimerValue(90);
 
-                        setEvents([]);
-                        setScore(20);
+                                setEvents([]);
+                                setScore(20);
 
-                        setCurrentAnimStep(0);
-                    }}>Play a New Game!</Button>
+                                setCurrentAnimStep(0);
+                            }}>Play a New Game!</Button>
+                        </Col>
+
+                        <Col>
+                            <Button variant="warning" onClick={() => {
+                                navigate('/scores');
+                            }}>Show Ranking!</Button>
+                        </Col>
+                    </Row>
                 </Container>
             }
 

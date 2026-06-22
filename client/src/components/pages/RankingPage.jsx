@@ -1,10 +1,13 @@
-import { Container, Row, Col, Table, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Table, Alert, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../../API';
 
 function RankingPage() {
     const [ranking, setRanking] = useState([]);
     const [errMessage, setErrMessage] = useState('');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const retrieveRanking = async () => {
@@ -52,6 +55,10 @@ function RankingPage() {
                             })}
                         </tbody>
                     </Table>
+
+                    <Button onClick={() => {
+                        navigate('/');
+                    }}>Back to Homepage!</Button>
                 </Col>
             </Row>
         </Container>
