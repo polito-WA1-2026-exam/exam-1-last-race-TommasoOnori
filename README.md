@@ -11,10 +11,6 @@
 
 ## API Server
 
-- METHOD `/api/something`
-  - request parameters and request body content
-  - response body content
-
 ### Authentication API
 
 GET `/api/sessions/current`
@@ -75,7 +71,7 @@ DELETE `/api/sessions/current`
   ```json
   res(200 OK): {}
   ```
-
+---
 ### Game API
 
 GET `/api/network`
@@ -166,6 +162,26 @@ POST `/api/games`
   ```
 
 GET `/api/ranking`
+  ```json
+  req: {
+    method: "GET",
+  }
+  ```
+  ```json
+  res(200 OK): {
+    ranking: [
+      {
+        Rank: _rank,
+        Email: _email,
+        MaxScore: _score
+      }, ...
+    ]
+  }
+
+  res(500 Server Error): {
+    error: "Ranking retrieval error."
+  }
+  ```
 
 ## Database Tables
 

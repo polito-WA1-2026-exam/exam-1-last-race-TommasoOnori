@@ -101,5 +101,20 @@ async function setGameRoute(selectedRoute, _endpoints) {
     }
 }
 
-const API = { logIn, logOut, getCurrentUser, getNetworkTopology, getEndpoints, setGameRoute };
+async function getGeneralRanking() {
+    const response = await fetch(`${serverURL}/api/ranking`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+        const ranking = await response.json();
+        return ranking;
+    } else {
+        const errMessage = await response.json();
+        throw new Error(errMessage.error);
+    }
+}
+
+const API = { logIn, logOut, getCurrentUser, getNetworkTopology, getEndpoints, setGameRoute, getGeneralRanking };
 export default API;

@@ -1,4 +1,4 @@
-import { Navbar, Container, Button, Nav } from 'react-bootstrap';
+import { Navbar, Container, Button, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ function MyNavbar({ loggedIn, handleLogout }) {
 
                     {loggedIn ?
                         (
+
                             <Button onClick={() => {
                                 handleLogout().then(() => {
                                     navigate('/');
@@ -24,6 +25,7 @@ function MyNavbar({ loggedIn, handleLogout }) {
                                     setErrMessage(err.message);
                                 });
                             }}>Log Out</Button>
+
                         ) : (
                             <Button as={Link} to="/login">Log In</Button>
                         )

@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 import { getStations, getLines, getSegments, getEndpointStations } from './network_dao.js';
 import { getEvents } from './events_dao.js';
-import { insertGame } from './games_dao.js';
+import { insertGame, getRanking } from './games_dao.js';
 
 const app = express();
 const port = 3001;
@@ -138,6 +138,15 @@ app.post('/api/games', isLoggedIn, async (req, res) => {
     return await saveGameAndRespond(finalScore, true, routeEvents);
   } catch (err) {
     return res.status(500).json({ error: "Events retrieval error." });
+  }
+});
+
+app.get('/api/ranking', isLoggedIn, async (req, res) => {
+  try {
+    const ranking = await getRanking();
+    res.status(200).json(ranking);
+  } catch (err) {
+    res.status(500).json({ error: "Ranking retrieval error." });
   }
 });
 
